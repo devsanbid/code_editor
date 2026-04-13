@@ -4,6 +4,8 @@ import { useEffect, useRef } from "react";
 import Editor, { useMonaco } from "@monaco-editor/react";
 import { FileSystemNode } from "@/lib/types";
 import { Play, Copy, AlignLeft, Keyboard } from "lucide-react";
+import { createHighlighter, bundledThemes } from 'shiki';
+import { shikiToMonaco } from '@shikijs/monaco';
 
 interface EditorPaneProps {
   file?: FileSystemNode;
@@ -13,6 +15,8 @@ interface EditorPaneProps {
   isVimMode: boolean;
   setIsVimMode: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+let highlighter: any = null;
 
 export default function EditorPane({ file, onChange, onRun, isRunning, isVimMode, setIsVimMode }: EditorPaneProps) {
   const monaco = useMonaco();
@@ -31,6 +35,40 @@ export default function EditorPane({ file, onChange, onRun, isRunning, isVimMode
         noSemanticValidation: true,
         noSyntaxValidation: true,
       });
+
+      const initShiki = async () => {
+        if (!highlighter) {
+          // Load the base night-owl theme
+          const rawTheme = await bundledThemes['night-owl']();
+          
+          // Clone it so we don't mutate the cached default
+          const customTheme = JSON.parse(JSON.stringify(rawTheme.default));
+          customTheme.name = 'night-owl-clean';
+          
+          // Strip out italics and bold
+          if (customTheme.tokenColors) {
+            customTheme.tokenColors.forEach((token: any) => {
+              if (token.settings && token.settings.fontStyle) {
+                delete token.settings.fontStyle;
+              }
+            });
+          }
+
+          highlighter = await createHighlighter({
+            themes: [customTheme],
+            langs: ['javascript', 'typescript', 'python', 'dart', 'java', 'c', 'rust'],
+          });
+        }
+        
+        ['javascript', 'typescript', 'python', 'dart', 'java', 'c', 'rust'].forEach((id) => {
+          monaco.languages.register({ id });
+        });
+
+        shikiToMonaco(highlighter, monaco);
+        monaco.editor.setTheme('night-owl-clean');
+      };
+
+      initShiki();
     }
   }, [monaco]);
 
@@ -69,21 +107,8 @@ export default function EditorPane({ file, onChange, onRun, isRunning, isVimMode
     onRunRef.current = onRun;
   }, [onRun]);
 
-  const handleEditorWillMount = (monaco: any) => {
-    monaco.editor.defineTheme('night-owl', {
-      base: 'vs-dark',
-      inherit: true,
-      rules: [
-        { background: '011627' },
-      ],
-      colors: {
-        'editor.background': '#011627',
-        'editor.foreground': '#d6deeb',
-        'editorLineNumber.foreground': '#5f7e97',
-        'editor.selectionBackground': '#1d3b53',
-        'editorCursor.foreground': '#80a4c2',
-      }
-    });
+  const handleEditorWillMount = () => {
+    // Theme is now managed by shiki
   };
 
   const handleEditorDidMount = async (editor: unknown, _monaco: unknown) => {
@@ -166,7 +191,7 @@ export default function EditorPane({ file, onChange, onRun, isRunning, isVimMode
           height="100%"
           language={file?.language || "plaintext"}
           value={file?.content || ""}
-          theme="night-owl"
+          theme="night-owl-clean"
           onChange={onChange}
           beforeMount={handleEditorWillMount}
           onMount={handleEditorDidMount}

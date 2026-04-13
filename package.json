@@ -11,6 +11,7 @@
   "dependencies": {
     "@eslint/eslintrc": "^3.3.5",
     "@monaco-editor/react": "^4.7.0",
+    "@shikijs/monaco": "^4.0.2",
     "lucide-react": "^1.8.0",
     "monaco-editor": "^0.55.1",
     "monaco-vim": "^0.4.4",
@@ -18,6 +19,7 @@
     "react": "^19.0.0-rc-65a56d0e-20241020",
     "react-dom": "^19.0.0-rc-65a56d0e-20241020",
     "react-resizable-panels": "^2.1.4",
+    "shiki": "^4.0.2",
     "uuid": "^13.0.0"
   },
   "devDependencies": {

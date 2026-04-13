@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# OpenCode - Minimal Full-Stack Code Editor
 
-## Getting Started
+A fast, distraction-free online code editor inspired by DartPad. It supports Python, JavaScript, TypeScript, Dart, Java, C, and Rust. Features a split-pane layout, Night Owl theme, Vim mode (by default), and secure backend execution utilizing Docker.
 
-First, run the development server:
+## Features
+- **Multi-language Support**: Python, JS, TS, Dart, Java, C, Rust
+- **Distraction-Free Environment**: No code-completion, no italics/bold styling, no auto-brackets, and hidden scrollbars
+- **Secure Code Execution**: Runs isolated code in a single universal Ubuntu-based Docker container
+- **Persistent File System**: Creates folders, files, and nested structures saved directly to your host machine's `./workspace`
+- **Interactive Terminal**: An integrated terminal that has internet access inside the container (e.g., to run `npm install`, `pip install`)
+- **Syntax Highlighting**: Industry-standard syntax highlighting powered by VS Code's TextMate engine (Shiki)
+
+---
+
+## Prerequisites
+Before running the project, you must have the following installed:
+1. [Node.js](https://nodejs.org/en/download/) (v18+)
+2. [Docker](https://docs.docker.com/engine/install/) (Must be running on your machine)
+
+---
+
+## 🚀 Quick Start (Automated Script)
+
+For first-time users, the easiest way to start the project is by running the automated setup script. 
+It will build the required Docker image, install all NPM dependencies, and start the Next.js development server automatically.
+
+```bash
+# Make the script executable (Mac/Linux)
+chmod +x setup.sh
+
+# Run the script
+./setup.sh
+```
+
+---
+
+## 🛠️ Manual Installation (Without Script)
+
+If you prefer to set up the project manually or the automated script fails, follow these steps:
+
+### 1. Build the Docker Image
+The application requires a secure execution environment to run your code. You must build this image locally.
+
+```bash
+docker build -t opencode-env .
+```
+
+### 2. Install NPM Dependencies
+Install the required packages. *(Note: `--legacy-peer-deps` is required due to upstream React 19 / Monaco version conflicts)*
+
+```bash
+npm install --legacy-peer-deps
+```
+
+### 3. Start the Development Server
+Once the Docker image is built and the packages are installed, start Next.js:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the editor.
