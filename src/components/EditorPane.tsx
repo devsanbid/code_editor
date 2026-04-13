@@ -54,6 +54,13 @@ export default function EditorPane({ file, onChange, onRun, isRunning, isVimMode
             });
           }
 
+          // Remove distracting borders
+          if (customTheme.colors) {
+            delete customTheme.colors['editor.selectionHighlightBorder'];
+            delete customTheme.colors['editor.wordHighlightBorder'];
+            delete customTheme.colors['editor.wordHighlightStrongBorder'];
+          }
+
           highlighter = await createHighlighter({
             themes: [customTheme],
             langs: ['javascript', 'typescript', 'python', 'dart', 'java', 'c', 'rust'],
@@ -211,6 +218,7 @@ export default function EditorPane({ file, onChange, onRun, isRunning, isVimMode
             renderLineHighlight: "none",
             matchBrackets: "never",
             bracketPairColorization: { enabled: false },
+            renderValidationDecorations: "off",
             scrollbar: {
               vertical: "hidden",
               horizontal: "hidden",
