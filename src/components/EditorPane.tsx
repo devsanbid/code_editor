@@ -3,9 +3,18 @@
 import { useEffect, useRef } from "react";
 import Editor, { useMonaco } from "@monaco-editor/react";
 import { FileSystemNode } from "@/lib/types";
-import { Play, Copy, AlignLeft, Keyboard } from "lucide-react";
-import { createHighlighter, bundledThemes } from 'shiki';
-import { shikiToMonaco } from '@shikijs/monaco';
+import {
+  Play,
+  Copy,
+  AlignLeft,
+  Keyboard,
+  Plus,
+  Minus,
+  PanelLeftClose,
+  PanelLeft,
+} from "lucide-react";
+import { createHighlighter, bundledThemes } from "shiki";
+import { shikiToMonaco } from "@shikijs/monaco";
 
 interface EditorPaneProps {
   file?: FileSystemNode;
@@ -14,11 +23,26 @@ interface EditorPaneProps {
   isRunning: boolean;
   isVimMode: boolean;
   setIsVimMode: React.Dispatch<React.SetStateAction<boolean>>;
+  fontSize: number;
+  setFontSize: React.Dispatch<React.SetStateAction<number>>;
+  toggleSidebar: () => void;
+  isSidebarOpen: boolean;
 }
 
 let highlighter: any = null;
 
-export default function EditorPane({ file, onChange, onRun, isRunning, isVimMode, setIsVimMode }: EditorPaneProps) {
+export default function EditorPane({
+  file,
+  onChange,
+  onRun,
+  isRunning,
+  isVimMode,
+  setIsVimMode,
+  fontSize,
+  setFontSize,
+  toggleSidebar,
+  isSidebarOpen,
+}: EditorPaneProps) {
   const monaco = useMonaco();
   const editorRef = useRef<unknown>(null);
   const vimModeRef = useRef<unknown>(null);
@@ -39,12 +63,12 @@ export default function EditorPane({ file, onChange, onRun, isRunning, isVimMode
       const initShiki = async () => {
         if (!highlighter) {
           // Load the base night-owl theme
-          const rawTheme = await bundledThemes['night-owl']();
-          
+          const rawTheme = await bundledThemes["night-owl"]();
+
           // Clone it so we don't mutate the cached default
           const customTheme = JSON.parse(JSON.stringify(rawTheme.default));
-          customTheme.name = 'night-owl-clean';
-          
+          customTheme.name = "night-owl-clean";
+
           // Strip out italics and bold
           if (customTheme.tokenColors) {
             customTheme.tokenColors.forEach((token: any) => {
@@ -56,25 +80,45 @@ export default function EditorPane({ file, onChange, onRun, isRunning, isVimMode
 
           // Remove distracting borders by making them transparent instead of deleting (which can trigger fallbacks)
           if (customTheme.colors) {
-            customTheme.colors['editor.selectionHighlightBorder'] = '#00000000';
-            customTheme.colors['editor.wordHighlightBorder'] = '#00000000';
-            customTheme.colors['editor.wordHighlightStrongBorder'] = '#00000000';
-            customTheme.colors['editor.findMatchBorder'] = '#00000000';
-            customTheme.colors['editor.findMatchHighlightBorder'] = '#00000000';
+            customTheme.colors["editor.selectionHighlightBorder"] = "#00000000";
+            customTheme.colors["editor.wordHighlightBorder"] = "#00000000";
+            customTheme.colors["editor.wordHighlightStrongBorder"] =
+              "#00000000";
+            customTheme.colors["editor.findMatchBorder"] = "#00000000";
+            customTheme.colors["editor.findMatchHighlightBorder"] = "#00000000";
           }
 
           highlighter = await createHighlighter({
             themes: [customTheme],
-            langs: ['javascript', 'typescript', 'python', 'dart', 'java', 'c', 'rust'],
+            langs: [
+              "javascript",
+              "typescript",
+              "python",
+              "dart",
+              "java",
+              "c",
+              "rust",
+            ],
           });
         }
-        
-        ['javascript', 'typescript', 'python', 'dart', 'java', 'c', 'rust'].forEach((id) => {
-          monaco.languages.register({ id });
+
+        const existingLangs = monaco.languages.getLanguages().map((l) => l.id);
+        [
+          "javascript",
+          "typescript",
+          "python",
+          "dart",
+          "java",
+          "c",
+          "rust",
+        ].forEach((id) => {
+          if (!existingLangs.includes(id)) {
+            monaco.languages.register({ id });
+          }
         });
 
         shikiToMonaco(highlighter, monaco);
-        monaco.editor.setTheme('night-owl-clean');
+        monaco.editor.setTheme("night-owl-clean");
       };
 
       initShiki();
@@ -90,8 +134,8 @@ export default function EditorPane({ file, onChange, onRun, isRunning, isVimMode
         const { initVimMode } = await import("monaco-vim");
         const statusNode = document.getElementById("vim-status");
         if (statusNode && editorRef.current && active) {
-           // @ts-expect-error monaco-vim types
-           vimModeRef.current = initVimMode(editorRef.current, statusNode);
+          // @ts-expect-error monaco-vim types
+          vimModeRef.current = initVimMode(editorRef.current, statusNode);
         }
       } else {
         if (vimModeRef.current) {
@@ -122,22 +166,31 @@ export default function EditorPane({ file, onChange, onRun, isRunning, isVimMode
 
   const handleEditorDidMount = async (editor: unknown, _monaco: unknown) => {
     editorRef.current = editor;
-    
+
     if (editor && _monaco) {
-      (editor as { addCommand: (key: number, handler: () => void) => void }).addCommand(
-        (_monaco as { KeyMod: { CtrlCmd: number }, KeyCode: { Enter: number } }).KeyMod.CtrlCmd | (_monaco as { KeyMod: { CtrlCmd: number }, KeyCode: { Enter: number } }).KeyCode.Enter,
+      (
+        editor as { addCommand: (key: number, handler: () => void) => void }
+      ).addCommand(
+        (_monaco as { KeyMod: { CtrlCmd: number }; KeyCode: { Enter: number } })
+          .KeyMod.CtrlCmd |
+          (
+            _monaco as {
+              KeyMod: { CtrlCmd: number };
+              KeyCode: { Enter: number };
+            }
+          ).KeyCode.Enter,
         () => {
           onRunRef.current();
-        }
+        },
       );
-      
+
       // Initialize vim mode immediately if it's supposed to be on by default
       if (isVimMode && !vimModeRef.current) {
         const { initVimMode } = await import("monaco-vim");
         const statusNode = document.getElementById("vim-status");
         if (statusNode) {
-           // @ts-expect-error monaco-vim types
-           vimModeRef.current = initVimMode(editor, statusNode);
+          // @ts-expect-error monaco-vim types
+          vimModeRef.current = initVimMode(editor, statusNode);
         }
       }
     }
@@ -149,9 +202,46 @@ export default function EditorPane({ file, onChange, onRun, isRunning, isVimMode
     }
   };
 
-  const handleFormat = () => {
-    if (editorRef.current) {
-      (editorRef.current as { getAction: (id: string) => { run: () => void } }).getAction("editor.action.formatDocument").run();
+  const handleFormat = async () => {
+    if (!file || !editorRef.current) return;
+
+    const editor = editorRef.current as any;
+    const lang = file.language || "plaintext";
+
+    // We had disabled the native syntax validation (which sometimes disables Monaco's built-in formatters)
+    // so we use our multi-language backend formatter for all languages to ensure it works reliably.
+    try {
+      const res = await fetch("/api/format", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code: file.content,
+          language: lang,
+        }),
+      });
+
+      const data = await res.json();
+      if (data.code && data.code !== file.content) {
+        // Apply edit safely to maintain undo stack and cursor
+        const model = editor.getModel();
+        if (model) {
+          model.pushEditOperations(
+            [],
+            [
+              {
+                range: model.getFullModelRange(),
+                text: data.code,
+              },
+            ],
+            () => null,
+          );
+        }
+      }
+    } catch (err) {
+      console.warn("Backend formatting failed", err);
+      // Fallback
+      const action = editor.getAction("editor.action.formatDocument");
+      if (action) action.run();
     }
   };
 
@@ -159,11 +249,28 @@ export default function EditorPane({ file, onChange, onRun, isRunning, isVimMode
     <div className="flex-1 flex flex-col w-full h-full bg-[#011627]">
       <div className="flex items-center justify-between px-4 py-2 border-b border-[#1d3b53] bg-[#0b2942]">
         <div className="flex items-center gap-4">
-          <span className="text-gray-300 font-medium text-sm">{file?.name}</span>
+          <div className="flex items-center gap-3">
+            <button
+              onClick={toggleSidebar}
+              className="text-gray-400 hover:text-white transition-colors"
+              title={isSidebarOpen ? "Hide Explorer" : "Show Explorer"}
+            >
+              {isSidebarOpen ? (
+                <PanelLeftClose size={16} />
+              ) : (
+                <PanelLeft size={16} />
+              )}
+            </button>
+            <span className="text-gray-300 font-medium text-sm">
+              {file?.name}
+            </span>
+          </div>
           <button
             onClick={() => setIsVimMode(!isVimMode)}
             className={`flex items-center gap-1.5 px-2 py-1 rounded text-xs transition-colors ${
-              isVimMode ? "bg-green-600/20 text-green-400" : "text-gray-400 hover:text-white"
+              isVimMode
+                ? "bg-green-600/20 text-green-400"
+                : "text-gray-400 hover:text-white"
             }`}
             title="Toggle Vim Mode"
           >
@@ -171,8 +278,27 @@ export default function EditorPane({ file, onChange, onRun, isRunning, isVimMode
             VIM
           </button>
         </div>
-        
+
         <div className="flex items-center gap-2">
+          <div className="flex items-center bg-[#1d3b53] rounded overflow-hidden mr-2">
+            <button
+              onClick={() => setFontSize(Math.max(10, fontSize - 1))}
+              className="px-2 py-1 text-gray-300 hover:text-white hover:bg-[#2b4c6b] transition-colors"
+              title="Decrease Font Size"
+            >
+              <Minus size={14} />
+            </button>
+            <span className="px-2 text-xs text-gray-300 min-w-[2rem] text-center select-none">
+              {fontSize}
+            </span>
+            <button
+              onClick={() => setFontSize(Math.min(30, fontSize + 1))}
+              className="px-2 py-1 text-gray-300 hover:text-white hover:bg-[#2b4c6b] transition-colors"
+              title="Increase Font Size"
+            >
+              <Plus size={14} />
+            </button>
+          </div>
           <button
             onClick={handleFormat}
             className="flex items-center gap-1 px-3 py-1.5 text-xs text-gray-300 hover:text-white hover:bg-[#1d3b53] rounded transition-colors"
@@ -194,7 +320,7 @@ export default function EditorPane({ file, onChange, onRun, isRunning, isVimMode
           </button>
         </div>
       </div>
-      
+
       <div className="flex-1 relative">
         <Editor
           height="100%"
@@ -206,7 +332,7 @@ export default function EditorPane({ file, onChange, onRun, isRunning, isVimMode
           onMount={handleEditorDidMount}
           options={{
             minimap: { enabled: false },
-            fontSize: 16,
+            fontSize: fontSize,
             wordWrap: "on",
             padding: { top: 16 },
             quickSuggestions: false,

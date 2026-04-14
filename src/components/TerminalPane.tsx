@@ -8,7 +8,11 @@ interface HistoryItem {
   text: string;
 }
 
-export default function TerminalPane() {
+interface TerminalPaneProps {
+  fontSize: number;
+}
+
+export default function TerminalPane({ fontSize }: TerminalPaneProps) {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [input, setInput] = useState("");
   const [isExecuting, setIsExecuting] = useState(false);
@@ -62,7 +66,8 @@ export default function TerminalPane() {
 
   return (
     <div 
-      className="flex-1 flex flex-col bg-[#011627] overflow-hidden text-sm font-mono font-[13px] leading-relaxed cursor-text"
+      className="flex-1 flex flex-col bg-[#011627] overflow-hidden font-mono leading-relaxed cursor-text"
+      style={{ fontSize: `${fontSize}px` }}
       onClick={() => inputRef.current?.focus()}
     >
       <div className="flex-1 overflow-y-auto p-4 space-y-2">

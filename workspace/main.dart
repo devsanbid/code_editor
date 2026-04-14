@@ -1,16 +1,6 @@
-
-// bank mangement system
-
-class Bank {
-    double balance;
-    String accountNumber;
-    String pin;
-    List<String> transcationHistory = [];
-
-    Bank({required})
-}
-
+import 'bank.dart';
 
 void main(){
-    Bank bank = Bank();
+  Bank bank = Bank(accountNumber: "ACC11", balance: 18000, pin: "1234");
+  print(bank.accountNumber);
 }

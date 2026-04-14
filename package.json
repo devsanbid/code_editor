@@ -16,6 +16,7 @@
     "monaco-editor": "^0.55.1",
     "monaco-vim": "^0.4.4",
     "next": "^15.0.0",
+    "prettier": "^3.8.2",
     "react": "^19.0.0-rc-65a56d0e-20241020",
     "react-dom": "^19.0.0-rc-65a56d0e-20241020",
     "react-resizable-panels": "^2.1.4",

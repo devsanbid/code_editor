@@ -17,7 +17,8 @@ export default function Home() {
   const [isRunning, setIsRunning] = useState(false);
   const [isVimMode, setIsVimMode] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
-  const [fontSize, setFontSize] = useState<number>(14);
+  const [fontSize, setFontSize] = useState<number>(16);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const [stdin, setStdin] = useState<string>("");
 
@@ -26,10 +27,10 @@ export default function Home() {
       try {
         const res = await fetch("/api/files");
         const data = await res.json();
-        
+
         if (data.files && data.files.length > 0) {
           setFiles(data.files);
-          
+
           // Try to find the first file
           const findFirstFile = (nodes: FileSystemNode[]): string => {
             for (const node of nodes) {
@@ -52,7 +53,10 @@ export default function Home() {
     loadFiles();
   }, []);
 
-  const findNode = (nodes: FileSystemNode[], id: string): FileSystemNode | undefined => {
+  const findNode = (
+    nodes: FileSystemNode[],
+    id: string,
+  ): FileSystemNode | undefined => {
     for (const node of nodes) {
       if (node.id === id) return node;
       if (node.children) {
@@ -65,22 +69,27 @@ export default function Home() {
 
   const activeFile = findNode(files, activeFileId);
 
-  const updateTree = (nodes: FileSystemNode[], id: string, content: string): FileSystemNode[] => {
+  const updateTree = (
+    nodes: FileSystemNode[],
+    id: string,
+    content: string,
+  ): FileSystemNode[] => {
     return nodes.map((node) => {
       if (node.id === id) return { ...node, content };
-      if (node.children) return { ...node, children: updateTree(node.children, id, content) };
+      if (node.children)
+        return { ...node, children: updateTree(node.children, id, content) };
       return node;
     });
   };
 
   const handleUpdateFile = async (id: string, content: string) => {
     setFiles((prev) => updateTree(prev, id, content));
-    
+
     // Save to persistent storage
     await fetch("/api/files", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "update", id, content })
+      body: JSON.stringify({ action: "update", id, content }),
     });
   };
 
@@ -114,24 +123,31 @@ export default function Home() {
   };
 
   if (isLoading) {
-    return <div className="flex h-screen w-screen items-center justify-center bg-[#011627] text-white">Loading Workspace...</div>;
+    return (
+      <div className="flex h-screen w-screen items-center justify-center bg-[#011627] text-white">
+        Loading Workspace...
+      </div>
+    );
   }
 
   return (
     <div className="flex h-screen w-screen bg-[#011627] text-[#d6deeb] font-sans overflow-hidden">
       <PanelGroup direction="horizontal">
-        <Panel defaultSize={11} minSize={10} maxSize={30}>
-          <Sidebar
-            files={files}
-            activeFileId={activeFileId}
-            setActiveFileId={setActiveFileId}
-            setFiles={setFiles}
-          />
-        </Panel>
-        
-        <PanelResizeHandle className="w-1 bg-[#1d3b53] hover:bg-blue-500 transition-colors cursor-col-resize" />
-        
-        <Panel defaultSize={50} minSize={30}>
+        {isSidebarOpen && (
+          <>
+            <Panel defaultSize={11} minSize={10} maxSize={30}>
+              <Sidebar
+                files={files}
+                activeFileId={activeFileId}
+                setActiveFileId={setActiveFileId}
+                setFiles={setFiles}
+              />
+            </Panel>
+            <PanelResizeHandle className="w-1 bg-[#1d3b53] hover:bg-blue-500 transition-colors cursor-col-resize" />
+          </>
+        )}
+
+        <Panel defaultSize={isSidebarOpen ? 50 : 61} minSize={30}>
           <div className="flex flex-col h-full border-r border-[#1d3b53]">
             <EditorPane
               file={activeFile}
@@ -140,12 +156,16 @@ export default function Home() {
               isRunning={isRunning}
               isVimMode={isVimMode}
               setIsVimMode={setIsVimMode}
+              fontSize={fontSize}
+              setFontSize={setFontSize}
+              toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
+              isSidebarOpen={isSidebarOpen}
             />
           </div>
         </Panel>
-        
+
         <PanelResizeHandle className="w-1 bg-[#1d3b53] hover:bg-blue-500 transition-colors cursor-col-resize" />
-        
+
         <Panel defaultSize={18} minSize={20}>
           <div className="flex flex-col h-full bg-[#011627]">
             <div className="flex items-center px-4 py-2 border-b border-[#1d3b53] bg-[#0b2942] text-sm text-gray-400 font-semibold tracking-wide uppercase gap-6">
@@ -162,7 +182,16 @@ export default function Home() {
                 Terminal
               </button>
             </div>
-            {activeTab === "console" ? <OutputPane output={output} stdin={stdin} setStdin={setStdin} /> : <TerminalPane />}
+            {activeTab === "console" ? (
+              <OutputPane
+                output={output}
+                stdin={stdin}
+                setStdin={setStdin}
+                fontSize={fontSize}
+              />
+            ) : (
+              <TerminalPane fontSize={fontSize} />
+            )}
           </div>
         </Panel>
       </PanelGroup>
