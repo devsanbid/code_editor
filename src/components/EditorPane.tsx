@@ -54,11 +54,13 @@ export default function EditorPane({ file, onChange, onRun, isRunning, isVimMode
             });
           }
 
-          // Remove distracting borders
+          // Remove distracting borders by making them transparent instead of deleting (which can trigger fallbacks)
           if (customTheme.colors) {
-            delete customTheme.colors['editor.selectionHighlightBorder'];
-            delete customTheme.colors['editor.wordHighlightBorder'];
-            delete customTheme.colors['editor.wordHighlightStrongBorder'];
+            customTheme.colors['editor.selectionHighlightBorder'] = '#00000000';
+            customTheme.colors['editor.wordHighlightBorder'] = '#00000000';
+            customTheme.colors['editor.wordHighlightStrongBorder'] = '#00000000';
+            customTheme.colors['editor.findMatchBorder'] = '#00000000';
+            customTheme.colors['editor.findMatchHighlightBorder'] = '#00000000';
           }
 
           highlighter = await createHighlighter({
@@ -219,6 +221,13 @@ export default function EditorPane({ file, onChange, onRun, isRunning, isVimMode
             matchBrackets: "never",
             bracketPairColorization: { enabled: false },
             renderValidationDecorations: "off",
+            unicodeHighlight: {
+              ambiguousCharacters: false,
+              invisibleCharacters: false,
+              nonBasicASCII: false,
+            },
+            renderWhitespace: "none",
+            renderControlCharacters: false,
             scrollbar: {
               vertical: "hidden",
               horizontal: "hidden",
