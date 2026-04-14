@@ -206,7 +206,7 @@ export default function EditorPane({ file, onChange, onRun, isRunning, isVimMode
           onMount={handleEditorDidMount}
           options={{
             minimap: { enabled: false },
-            fontSize: 14,
+            fontSize: 16,
             wordWrap: "on",
             padding: { top: 16 },
             quickSuggestions: false,

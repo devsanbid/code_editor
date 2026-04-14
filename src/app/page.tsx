@@ -17,6 +17,7 @@ export default function Home() {
   const [isRunning, setIsRunning] = useState(false);
   const [isVimMode, setIsVimMode] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const [fontSize, setFontSize] = useState<number>(14);
 
   const [stdin, setStdin] = useState<string>("");
 
@@ -119,7 +120,7 @@ export default function Home() {
   return (
     <div className="flex h-screen w-screen bg-[#011627] text-[#d6deeb] font-sans overflow-hidden">
       <PanelGroup direction="horizontal">
-        <Panel defaultSize={15} minSize={10} maxSize={30}>
+        <Panel defaultSize={11} minSize={10} maxSize={30}>
           <Sidebar
             files={files}
             activeFileId={activeFileId}
@@ -145,7 +146,7 @@ export default function Home() {
         
         <PanelResizeHandle className="w-1 bg-[#1d3b53] hover:bg-blue-500 transition-colors cursor-col-resize" />
         
-        <Panel defaultSize={35} minSize={20}>
+        <Panel defaultSize={18} minSize={20}>
           <div className="flex flex-col h-full bg-[#011627]">
             <div className="flex items-center px-4 py-2 border-b border-[#1d3b53] bg-[#0b2942] text-sm text-gray-400 font-semibold tracking-wide uppercase gap-6">
               <button
