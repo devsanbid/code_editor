@@ -2,10 +2,13 @@
   "name": "code_editor",
   "version": "0.1.0",
   "private": true,
+  "main": "main.js",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
+    "desktop": "npm run build && electron .",
+    "desktop:dev": "npm run dev & electron .",
     "lint": "eslint"
   },
   "dependencies": {
@@ -29,6 +32,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/uuid": "^10.0.0",
+    "electron": "^41.2.0",
     "eslint": "^9",
     "eslint-config-next": "^15.0.0",
     "tailwindcss": "^4",

@@ -3,9 +3,22 @@
 import { useState, useEffect } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import Sidebar from "@/components/Sidebar";
-import EditorPane from "@/components/EditorPane";
-import OutputPane from "@/components/OutputPane";
-import TerminalPane from "@/components/TerminalPane";
+import dynamic from "next/dynamic";
+
+const EditorPane = dynamic(() => import("@/components/EditorPane"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex-1 flex items-center justify-center bg-[#011627] text-gray-500">
+      Loading editor...
+    </div>
+  ),
+});
+const TerminalPane = dynamic(() => import("@/components/TerminalPane"), {
+  ssr: false,
+});
+const OutputPane = dynamic(() => import("@/components/OutputPane"), {
+  ssr: false,
+});
 import { FileSystemNode } from "@/lib/types";
 import { DEFAULT_FILES } from "@/lib/defaults";
 
@@ -21,6 +34,84 @@ export default function Home() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const [stdin, setStdin] = useState<string>("");
+
+  const handleAddFile = async (
+    parentId: string | null = null,
+    e?: React.MouseEvent | KeyboardEvent,
+  ) => {
+    e?.preventDefault();
+    e?.stopPropagation();
+    const name = prompt("File name (e.g., test.js, main.py):");
+    if (!name) return;
+
+    // Quick language map
+    const ext = name.split(".").pop() || "";
+    const LANGUAGE_MAP: Record<string, string> = {
+      js: "javascript",
+      ts: "typescript",
+      py: "python",
+      dart: "dart",
+      java: "java",
+      c: "c",
+      rs: "rust",
+    };
+    const language = LANGUAGE_MAP[ext] || "plaintext";
+
+    const id = parentId ? `${parentId}/${name}` : name;
+    const newFile: FileSystemNode = {
+      id,
+      name,
+      type: "file",
+      language,
+      content: "",
+    };
+
+    setFiles((prev) => {
+      // Replicate the addNode logic
+      const updateTreeAdd = (
+        nodes: FileSystemNode[],
+        parentId: string | null,
+        newNode: FileSystemNode,
+      ): FileSystemNode[] => {
+        if (!parentId) return [...nodes, newNode];
+        return nodes.map((node) => {
+          if (node.id === parentId)
+            return { ...node, children: [...(node.children || []), newNode] };
+          if (node.children)
+            return {
+              ...node,
+              children: updateTreeAdd(node.children, parentId, newNode),
+            };
+          return node;
+        });
+      };
+      return updateTreeAdd(prev, parentId, newFile);
+    });
+
+    setActiveFileId(newFile.id);
+
+    await fetch("/api/files", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action: "create",
+        parentId,
+        name,
+        type: "file",
+        content: "",
+      }),
+    });
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === "n") {
+        handleAddFile(null, e);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   useEffect(() => {
     const loadFiles = async () => {
@@ -141,6 +232,7 @@ export default function Home() {
                 activeFileId={activeFileId}
                 setActiveFileId={setActiveFileId}
                 setFiles={setFiles}
+                onAddFile={handleAddFile}
               />
             </Panel>
             <PanelResizeHandle className="w-1 bg-[#1d3b53] hover:bg-blue-500 transition-colors cursor-col-resize" />

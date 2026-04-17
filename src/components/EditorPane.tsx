@@ -341,6 +341,7 @@ export default function EditorPane({
             tabCompletion: "off",
             wordBasedSuggestions: "off",
             fontFamily: "'Fira Code', 'JetBrains Mono', monospace",
+            mouseStyle: "default",
             selectionHighlight: false,
             occurrencesHighlight: "off",
             renderLineHighlight: "none",

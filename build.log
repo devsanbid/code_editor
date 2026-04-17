@@ -1,202 +1,0 @@
-#0 building with "default" instance using docker driver
-
-#1 [internal] load build definition from Dockerfile
-#1 transferring dockerfile: 1.36kB done
-#1 DONE 0.0s
-
-#2 [internal] load metadata for docker.io/library/ubuntu:22.04
-#2 DONE 2.1s
-
-#3 [internal] load .dockerignore
-#3 transferring context: 2B done
-#3 DONE 0.0s
-
-#4 [1/6] FROM docker.io/library/ubuntu:22.04@sha256:eb29ed27b0821dca09c2e28b39135e185fc1302036427d5f4d70a41ce8fd7659
-#4 DONE 0.0s
-
-#5 [2/6] RUN apt-get update && apt-get install -y     curl     wget     gnupg2     software-properties-common     apt-transport-https     python3     python3-pip     openjdk-17-jdk     gcc     && rm -rf /var/lib/apt/lists/*
-#5 CACHED
-
-#6 [3/6] RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash -     && apt-get update && apt-get install -y nodejs     && npm install -g typescript tsx     && rm -rf /var/lib/apt/lists/*
-#6 0.660 [38;5;79m2026-04-13 16:43:13 - Installing pre-requisites[0m
-#6 0.667 
-#6 0.667 WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
-#6 0.667 
-#6 6.314 Get:1 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
-#6 6.406 Get:2 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
-#6 7.799 Get:3 http://security.ubuntu.com/ubuntu jammy-security/main amd64 Packages [3895 kB]
-#6 8.389 Get:4 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
-#6 8.857 Get:5 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]
-#6 9.777 Get:6 http://archive.ubuntu.com/ubuntu jammy/main amd64 Packages [1792 kB]
-#6 10.82 Get:7 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 Packages [62.6 kB]
-#6 10.86 Get:8 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [1311 kB]
-#6 13.58 Get:9 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [6935 kB]
-#6 13.88 Get:10 http://archive.ubuntu.com/ubuntu jammy/multiverse amd64 Packages [266 kB]
-#6 13.89 Get:11 http://archive.ubuntu.com/ubuntu jammy/restricted amd64 Packages [164 kB]
-#6 13.95 Get:12 http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages [17.5 MB]
-#6 26.85 Get:13 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 Packages [70.9 kB]
-#6 26.88 Get:14 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [7143 kB]
-#6 31.86 Get:15 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [1622 kB]
-#6 32.60 Get:16 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [4226 kB]
-#6 35.43 Get:17 http://archive.ubuntu.com/ubuntu jammy-backports/main amd64 Packages [84.0 kB]
-#6 35.45 Get:18 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 Packages [35.6 kB]
-#6 35.65 Fetched 45.7 MB in 35s (1308 kB/s)
-#6 35.65 Reading package lists...
-#6 36.86 Building dependency tree...
-#6 37.10 Reading state information...
-#6 37.12 2 packages can be upgraded. Run 'apt list --upgradable' to see them.
-#6 37.13 
-#6 37.13 WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
-#6 37.13 
-#6 37.17 Reading package lists...
-#6 38.37 Building dependency tree...
-#6 38.57 Reading state information...
-#6 38.80 ca-certificates is already the newest version (20240203~22.04.1).
-#6 38.80 ca-certificates set to manually installed.
-#6 38.80 curl is already the newest version (7.81.0-1ubuntu1.23).
-#6 38.80 gnupg is already the newest version (2.2.27-3ubuntu2.5).
-#6 38.80 gnupg set to manually installed.
-#6 38.80 apt-transport-https is already the newest version (2.4.14).
-#6 38.80 0 upgraded, 0 newly installed, 0 to remove and 2 not upgraded.
-#6 39.09 
-#6 39.09 WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
-#6 39.09 
-#6 39.38 Get:1 https://deb.nodesource.com/node_20.x nodistro InRelease [12.1 kB]
-#6 39.61 Hit:2 http://archive.ubuntu.com/ubuntu jammy InRelease
-#6 39.79 Hit:3 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
-#6 39.87 Get:4 https://deb.nodesource.com/node_20.x nodistro/main amd64 Packages [14.3 kB]
-#6 39.92 Hit:5 http://security.ubuntu.com/ubuntu jammy-security InRelease
-#6 39.98 Hit:6 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
-#6 40.17 Fetched 26.5 kB in 1s (26.4 kB/s)
-#6 40.17 Reading package lists...
-#6 41.44 Building dependency tree...
-#6 41.66 Reading state information...
-#6 41.68 2 packages can be upgraded. Run 'apt list --upgradable' to see them.
-#6 41.69 [1;34m2026-04-13 16:43:54 - Repository configured successfully.[0m
-#6 41.69 [38;5;79m2026-04-13 16:43:54 - To install Node.js, run: apt install nodejs -y[0m
-#6 41.69 [38;5;79m2026-04-13 16:43:54 - You can use N|solid Runtime as a node.js alternative[0m
-#6 41.69 [1;32m2026-04-13 16:43:54 - To install N|solid Runtime, run: apt install nsolid -y 
-#6 41.69 [0m
-#6 42.06 Hit:1 https://deb.nodesource.com/node_20.x nodistro InRelease
-#6 42.22 Hit:2 http://security.ubuntu.com/ubuntu jammy-security InRelease
-#6 42.47 Hit:3 http://archive.ubuntu.com/ubuntu jammy InRelease
-#6 42.75 Hit:4 http://archive.ubuntu.com/ubuntu jammy-updates InRelease
-#6 43.03 Hit:5 http://archive.ubuntu.com/ubuntu jammy-backports InRelease
-#6 43.15 Reading package lists...
-#6 44.41 Reading package lists...
-#6 45.60 Building dependency tree...
-#6 45.81 Reading state information...
-#6 46.05 The following NEW packages will be installed:
-#6 46.05   nodejs
-#6 46.75 0 upgraded, 1 newly installed, 0 to remove and 2 not upgraded.
-#6 46.75 Need to get 32.2 MB of archives.
-#6 46.75 After this operation, 196 MB of additional disk space will be used.
-#6 46.75 Get:1 https://deb.nodesource.com/node_20.x nodistro/main amd64 nodejs amd64 20.20.2-1nodesource1 [32.2 MB]
-#6 64.14 debconf: delaying package configuration, since apt-utils is not installed
-#6 64.18 Fetched 32.2 MB in 18s (1799 kB/s)
-#6 64.21 Selecting previously unselected package nodejs.
-#6 64.21 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 36140 files and directories currently installed.)
-#6 64.23 Preparing to unpack .../nodejs_20.20.2-1nodesource1_amd64.deb ...
-#6 64.23 Unpacking nodejs (20.20.2-1nodesource1) ...
-#6 67.44 Setting up nodejs (20.20.2-1nodesource1) ...
-#6 77.66 
-#6 77.66 added 6 packages in 10s
-#6 77.66 
-#6 77.66 2 packages are looking for funding
-#6 77.66   run `npm fund` for details
-#6 77.67 npm notice
-#6 77.67 npm notice New major version of npm available! 10.8.2 -> 11.12.1
-#6 77.67 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.12.1
-#6 77.67 npm notice To update run: npm install -g npm@11.12.1
-#6 77.67 npm notice
-#6 DONE 77.8s
-
-#7 [4/6] RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
-#7 1.050 info: downloading installer
-#7 18.49 warn: It looks like you have an existing rustup settings file at:
-#7 18.49 warn: /usr/local/rustup/settings.toml
-#7 18.49 warn: Rustup will install the default toolchain as specified in the settings file,
-#7 18.49 warn: instead of the one inferred from the default host triple.
-#7 18.50 info: profile set to default
-#7 18.50 info: default host triple is x86_64-unknown-linux-gnu
-#7 18.50 info: syncing channel updates for stable-x86_64-unknown-linux-gnu
-#7 20.41 info: latest update on 2026-03-26 for version 1.94.1 (e408947bf 2026-03-25)
-#7 20.41 info: downloading 6 components
-#7 105.0 
-#7 105.0 info: default toolchain set to stable-x86_64-unknown-linux-gnu
-#7 105.0   stable-x86_64-unknown-linux-gnu installed - rustc 1.94.1 (e408947bf 2026-03-25)
-#7 105.0 
-#7 105.0 
-#7 105.0 Rust is installed now. Great!
-#7 105.0 
-#7 105.0 To get started you need Cargo's bin directory (/usr/local/cargo/bin) in your 
-#7 105.0 PATH
-#7 105.0 environment variable. This has not been done automatically.
-#7 105.0 
-#7 105.0 To configure your current shell, you need to source
-#7 105.0 the corresponding env file under /usr/local/cargo.
-#7 105.0 
-#7 105.0 This is usually done by running one of the following (note the leading DOT):
-#7 105.0 . "/usr/local/cargo/env"            # For sh/bash/zsh/ash/dash/pdksh
-#7 105.0 source "/usr/local/cargo/env.fish"  # For fish
-#7 105.0 source "/usr/local/cargo/env.nu"  # For nushell
-#7 105.0 source "/usr/local/cargo/env.tcsh"  # For tcsh
-#7 105.0 . "/usr/local/cargo/env.ps1"        # For pwsh
-#7 105.0 source "/usr/local/cargo/env.xsh"   # For xonsh
-#7 DONE 105.2s
-
-#8 [5/6] RUN wget -qO- https://dl-ssl.google.com/linux/linux_signing_key.pub | gpg --dearmor -o /usr/share/keyrings/dart.gpg     && echo 'deb [signed-by=/usr/share/keyrings/dart.gpg arch=amd64] https://storage.googleapis.com/download.dartlang.org/linux/debian stable main' | tee /etc/apt/sources.list.d/dart_stable.list     && apt-get update && apt-get install -y dart     && rm -rf /var/lib/apt/lists/*
-#8 0.611 deb [signed-by=/usr/share/keyrings/dart.gpg arch=amd64] https://storage.googleapis.com/download.dartlang.org/linux/debian stable main
-#8 0.911 Get:1 https://deb.nodesource.com/node_20.x nodistro InRelease [12.1 kB]
-#8 1.034 Get:2 https://deb.nodesource.com/node_20.x nodistro/main amd64 Packages [14.3 kB]
-#8 1.112 Get:3 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
-#8 1.142 Ign:4 https://storage.googleapis.com/download.dartlang.org/linux/debian stable InRelease
-#8 1.205 Get:5 http://security.ubuntu.com/ubuntu jammy-security InRelease [129 kB]
-#8 1.428 Get:6 https://storage.googleapis.com/download.dartlang.org/linux/debian stable Release [3136 B]
-#8 1.717 Get:7 https://storage.googleapis.com/download.dartlang.org/linux/debian stable Release.gpg [833 B]
-#8 2.149 Get:8 https://storage.googleapis.com/download.dartlang.org/linux/debian stable/main amd64 Packages [15.2 kB]
-#8 2.153 Get:9 http://archive.ubuntu.com/ubuntu jammy-updates InRelease [128 kB]
-#8 2.402 Get:10 http://archive.ubuntu.com/ubuntu jammy-backports InRelease [127 kB]
-#8 2.467 Get:11 http://security.ubuntu.com/ubuntu jammy-security/main amd64 Packages [3895 kB]
-#8 2.655 Get:12 http://archive.ubuntu.com/ubuntu jammy/universe amd64 Packages [17.5 MB]
-#8 7.100 Get:13 http://security.ubuntu.com/ubuntu jammy-security/universe amd64 Packages [1311 kB]
-#8 8.504 Get:14 http://security.ubuntu.com/ubuntu jammy-security/restricted amd64 Packages [6935 kB]
-#8 17.76 Get:15 http://archive.ubuntu.com/ubuntu jammy/restricted amd64 Packages [164 kB]
-#8 17.76 Get:16 http://archive.ubuntu.com/ubuntu jammy/multiverse amd64 Packages [266 kB]
-#8 17.76 Get:17 http://archive.ubuntu.com/ubuntu jammy/main amd64 Packages [1792 kB]
-#8 17.78 Get:18 http://security.ubuntu.com/ubuntu jammy-security/multiverse amd64 Packages [62.6 kB]
-#8 18.61 Get:19 http://archive.ubuntu.com/ubuntu jammy-updates/multiverse amd64 Packages [70.9 kB]
-#8 19.07 Get:20 http://archive.ubuntu.com/ubuntu jammy-updates/main amd64 Packages [4226 kB]
-#8 22.73 Get:21 http://archive.ubuntu.com/ubuntu jammy-updates/universe amd64 Packages [1622 kB]
-#8 23.59 Get:22 http://archive.ubuntu.com/ubuntu jammy-updates/restricted amd64 Packages [7143 kB]
-#8 27.99 Get:23 http://archive.ubuntu.com/ubuntu jammy-backports/universe amd64 Packages [35.6 kB]
-#8 28.24 Get:24 http://archive.ubuntu.com/ubuntu jammy-backports/main amd64 Packages [84.0 kB]
-#8 28.34 Fetched 45.8 MB in 28s (1654 kB/s)
-#8 28.34 Reading package lists...
-#8 29.60 Reading package lists...
-#8 30.81 Building dependency tree...
-#8 31.05 Reading state information...
-#8 31.28 The following NEW packages will be installed:
-#8 31.29   dart
-#8 32.16 0 upgraded, 1 newly installed, 0 to remove and 2 not upgraded.
-#8 32.16 Need to get 154 MB of archives.
-#8 32.16 After this operation, 638 MB of additional disk space will be used.
-#8 32.16 Get:1 https://storage.googleapis.com/download.dartlang.org/linux/debian stable/main amd64 dart amd64 3.11.4-1 [154 MB]
-#8 111.4 debconf: delaying package configuration, since apt-utils is not installed
-#8 111.5 Fetched 154 MB in 1min 20s (1929 kB/s)
-#8 111.5 Selecting previously unselected package dart.
-#8 111.5 (Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 41503 files and directories currently installed.)
-#8 111.5 Preparing to unpack .../dart_3.11.4-1_amd64.deb ...
-#8 111.5 Unpacking dart (3.11.4-1) ...
-#8 120.3 Setting up dart (3.11.4-1) ...
-#8 DONE 120.4s
-
-#9 [6/6] WORKDIR /app
-#9 DONE 0.0s
-
-#10 exporting to image
-#10 exporting layers
-#10 exporting layers 8.7s done
-#10 writing image sha256:d78df263107e8a3bb244084606f31cd3a791eb9d86e4f34ed06c10a1c2a365d3 done
-#10 naming to docker.io/library/opencode-env done
-#10 DONE 8.7s

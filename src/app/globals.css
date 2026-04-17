@@ -24,3 +24,13 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Force arrow cursor in monaco editor instead of I-beam */
+.monaco-editor,
+.monaco-editor .inputarea,
+.monaco-editor .margin,
+.monaco-editor .view-lines,
+.monaco-editor .monaco-mouse-cursor-text,
+.monaco-editor-hover {
+  cursor: default !important;
+}
