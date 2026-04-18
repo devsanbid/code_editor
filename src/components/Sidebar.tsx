@@ -8,6 +8,11 @@ import {
   ChevronRight,
   FolderPlus,
   FilePlus,
+  FileCode2,
+  FileJson,
+  FileType2,
+  Image as ImageIcon,
+  FileText,
 } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
 import React, { useState } from "react";
@@ -31,6 +36,44 @@ const LANGUAGE_MAP: Record<string, string> = {
   java: "java",
   c: "c",
   rs: "rust",
+};
+
+// Helper for dynamic file icons based on extension
+const getFileIcon = (fileName: string) => {
+  const ext = fileName.split(".").pop()?.toLowerCase();
+  switch (ext) {
+    case "js":
+    case "ts":
+    case "jsx":
+    case "tsx":
+    case "py":
+    case "java":
+    case "c":
+    case "cpp":
+    case "rs":
+    case "dart":
+    case "go":
+    case "php":
+      return FileCode2;
+    case "json":
+      return FileJson;
+    case "md":
+    case "txt":
+    case "csv":
+    case "log":
+      return FileText;
+    case "png":
+    case "jpg":
+    case "jpeg":
+    case "gif":
+    case "svg":
+      return ImageIcon;
+    case "html":
+    case "css":
+      return FileType2;
+    default:
+      return FileIcon;
+  }
 };
 
 // Helpers for nested tree
@@ -258,6 +301,8 @@ export default function Sidebar({
         );
       }
 
+      const ActiveIcon = getFileIcon(node.name);
+
       return (
         <div
           key={node.id}
@@ -270,7 +315,7 @@ export default function Sidebar({
           style={{ paddingLeft: `${depth * 12 + 16}px` }}
         >
           <div className="flex items-center gap-2 overflow-hidden pl-4">
-            <FileIcon
+            <ActiveIcon
               size={14}
               className={
                 activeFileId === node.id ? "text-blue-400" : "text-[#5f7e97]"
