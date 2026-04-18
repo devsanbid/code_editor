@@ -68,7 +68,9 @@ export async function POST(req: Request) {
         runCommand = `dart run ${fileName} < /workspace/.stdin.txt`;
         break;
       case "java":
-        runCommand = `javac ${fileName} && java ${fileName.replace(".java", "")} < /workspace/.stdin.txt`;
+        // Use Java 11+ single-file execution to skip javac overhead
+        // Use -XX:TieredStopAtLevel=1 for fast startup (disables slow C2 compiler)
+        runCommand = `java -XX:TieredStopAtLevel=1 ${fileName} < /workspace/.stdin.txt`;
         break;
       case "c":
         runCommand = `gcc ${fileName} -o main && ./main < /workspace/.stdin.txt`;
@@ -82,7 +84,12 @@ export async function POST(req: Request) {
     // -v mounts the persistent workspace
     // -w sets the working directory to the file's directory inside workspace
     const hostWorkspaceDir = process.env.HOST_WORKSPACE_DIR || WORKSPACE_DIR;
-    const dockerCmd = `timeout 5s docker run --rm --network none --memory="256m" --cpus="0.5" -v "${hostWorkspaceDir}":/workspace -w "${workDir}" ${image} sh -c "${runCommand}"`;
+
+    // Give containers 1.0 CPU instead of 0.5. The JVM and compilers (rustc, gcc, tsx) struggle on 0.5 CPU
+    const cpus = language === "java" ? "1.5" : "1.0";
+    const memory = language === "java" ? "512m" : "256m";
+
+    const dockerCmd = `timeout 5s docker run --rm --network none --memory="${memory}" --cpus="${cpus}" -v "${hostWorkspaceDir}":/workspace -w "${workDir}" ${image} sh -c "${runCommand}"`;
 
     try {
       const { stdout, stderr } = await execAsync(dockerCmd, { timeout: 10000 });
