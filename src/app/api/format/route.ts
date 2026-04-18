@@ -103,7 +103,8 @@ export async function POST(req: Request) {
         return NextResponse.json({ code });
     }
 
-    const dockerCmd = `timeout 15s docker run --rm --network host --memory="256m" --cpus="1.0" -v "${WORKSPACE_DIR}":/workspace opencode-env sh -c "${formatCommand}"`;
+    const hostWorkspaceDir = process.env.HOST_WORKSPACE_DIR || WORKSPACE_DIR;
+    const dockerCmd = `timeout 15s docker run --rm --network host --memory="256m" --cpus="1.0" -v "${hostWorkspaceDir}":/workspace opencode-env sh -c "${formatCommand}"`;
 
     try {
       await execAsync(dockerCmd, { timeout: 20000 });

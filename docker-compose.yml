@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  opencode-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    container_name: opencode_editor_app
+    ports:
+      - "5050:5050"
+    environment:
+      - NODE_ENV=production
+      - PORT=5050
+      # Provide the host's workspace absolute path to mount it into format/run containers
+      - HOST_WORKSPACE_DIR=${PWD}/workspace
+    volumes:
+      # Mount docker socket to allow formatters/runners to launch isolated containers
+      - /var/run/docker.sock:/var/run/docker.sock
+      # Mount the actual workspace for local persistence
+      - ./workspace:/app/workspace
+    restart: unless-stopped
