@@ -8,12 +8,21 @@ import {
   ChevronRight,
   FolderPlus,
   FilePlus,
-  FileCode2,
-  FileJson,
-  FileType2,
   Image as ImageIcon,
-  FileText,
 } from "lucide-react";
+import {
+  SiJavascript,
+  SiTypescript,
+  SiPython,
+  SiC,
+  SiCplusplus,
+  SiRust,
+  SiDart,
+  SiGo,
+  SiMarkdown,
+} from "react-icons/si";
+import { FaJava, FaHtml5, FaCss3Alt } from "react-icons/fa";
+import { VscJson } from "react-icons/vsc";
 import { v4 as uuidv4 } from "uuid";
 import React, { useState } from "react";
 
@@ -43,36 +52,41 @@ const getFileIcon = (fileName: string) => {
   const ext = fileName.split(".").pop()?.toLowerCase();
   switch (ext) {
     case "js":
-    case "ts":
     case "jsx":
+      return { icon: SiJavascript, color: "text-yellow-400" };
+    case "ts":
     case "tsx":
+      return { icon: SiTypescript, color: "text-blue-400" };
     case "py":
+      return { icon: SiPython, color: "text-blue-300" };
     case "java":
+      return { icon: FaJava, color: "text-orange-400" };
     case "c":
+      return { icon: SiC, color: "text-blue-500" };
     case "cpp":
+      return { icon: SiCplusplus, color: "text-blue-600" };
     case "rs":
+      return { icon: SiRust, color: "text-orange-600" };
     case "dart":
+      return { icon: SiDart, color: "text-teal-400" };
     case "go":
-    case "php":
-      return FileCode2;
+      return { icon: SiGo, color: "text-cyan-400" };
     case "json":
-      return FileJson;
+      return { icon: VscJson, color: "text-yellow-200" };
     case "md":
-    case "txt":
-    case "csv":
-    case "log":
-      return FileText;
+      return { icon: SiMarkdown, color: "text-slate-300" };
+    case "html":
+      return { icon: FaHtml5, color: "text-orange-500" };
+    case "css":
+      return { icon: FaCss3Alt, color: "text-blue-400" };
     case "png":
     case "jpg":
     case "jpeg":
     case "gif":
     case "svg":
-      return ImageIcon;
-    case "html":
-    case "css":
-      return FileType2;
+      return { icon: ImageIcon, color: "text-purple-400" };
     default:
-      return FileIcon;
+      return { icon: FileIcon, color: "text-[#5f7e97]" };
   }
 };
 
@@ -301,7 +315,7 @@ export default function Sidebar({
         );
       }
 
-      const ActiveIcon = getFileIcon(node.name);
+      const { icon: ActiveIcon, color: iconColor } = getFileIcon(node.name);
 
       return (
         <div
@@ -318,7 +332,7 @@ export default function Sidebar({
             <ActiveIcon
               size={14}
               className={
-                activeFileId === node.id ? "text-blue-400" : "text-[#5f7e97]"
+                activeFileId === node.id ? iconColor : "text-[#5f7e97]"
               }
             />
             <span className="truncate">{node.name}</span>
