@@ -82,10 +82,6 @@ export async function POST(req: Request) {
     let formatCommand = "";
 
     switch (language) {
-      case "java":
-        // npx prettier inside container with plugin
-        formatCommand = `npx --yes prettier@3 --write /workspace/${fileName}`;
-        break;
       case "dart":
         formatCommand = `dart format /workspace/${fileName}`;
         break;
@@ -95,8 +91,9 @@ export async function POST(req: Request) {
       case "python":
         formatCommand = `pip install --quiet autopep8 && autopep8 --in-place /workspace/${fileName}`;
         break;
+      case "java":
       case "c":
-        formatCommand = `apt-get update -qq && apt-get install -y -qq clang-format && clang-format -i /workspace/${fileName}`;
+        formatCommand = `apt-get update -qq && apt-get install -y -qq clang-format && clang-format -style=Google -i /workspace/${fileName}`;
         break;
       default:
         await fs.unlink(filePath).catch(() => {});
