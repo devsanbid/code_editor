@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     openjdk-17-jdk \
     gcc \
+    clang-format \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Node.js (20.x) and TypeScript/tsx

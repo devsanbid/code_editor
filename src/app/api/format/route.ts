@@ -93,7 +93,7 @@ export async function POST(req: Request) {
         break;
       case "java":
       case "c":
-        formatCommand = `apt-get update -qq && apt-get install -y -qq clang-format && clang-format -style=Google -i /workspace/${fileName}`;
+        formatCommand = `clang-format -style=Google -i /workspace/${fileName}`;
         break;
       default:
         await fs.unlink(filePath).catch(() => {});
